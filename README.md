@@ -1,15 +1,18 @@
 # Arquitecturas-de-Software-2025
 Repositorio para la recepción de cada una de las entregas del proyecto de la materia Arquitectura de Software.
 
-## Integrantes del equipo:
-[Guiseph Alexis Chan Torres](https://pages.github.com/)
+## :baby_chick: Integrantes del Equipo
 
-[Aldrin Enique Novelo Góngora](https://pages.github.com/)
+| Nombre | Rol | Fotografia |
+|--------|-----|------------|
+| [Guiseph Alexis Chan Torres](https://pages.github.com/)| N/A | Integrante.jpg |
+| [Aldrin Enique Novelo Góngora](https://pages.github.com/)| N/A | Integrante.jpg |
+| [Carlos Emmanuel Romerto Poot](https://github.com/CarlosRomero123)| N/A |Integrante.jpg |
+| [Erick Ricardo Vega Nolasco](https://pages.github.com/)| N/A | Integrante.jpg |
 
-[Carlos Emmanuel Romerto Poot]([https://pages.github.com/](https://github.com/CarlosRomero123))
 
-[Erick Ricardo Vega Nolasco](https://pages.github.com/)
+##  :computer: Entregas del proyecto
 
-## Entregas del proyecto
-[Primera Entrega](https://www.facebook.com/?locale=es_LA)
-[Entrega final](https://www.facebook.com/?locale=es_LA)
+:one: [Primera Entrega](https://www.facebook.com/?locale=es_LA)
+
+:arrow_double_down: [Entrega final](https://www.facebook.com/?locale=es_LA)
