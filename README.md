@@ -6,7 +6,7 @@ Repositorio para la recepción de cada una de las entregas del proyecto de la ma
 
 [Aldrin Enique Novelo Góngora](https://pages.github.com/)
 
-[Carlos Emmanuel Romerto Poot](https://pages.github.com/)
+[Carlos Emmanuel Romerto Poot]([https://pages.github.com/](https://github.com/CarlosRomero123))
 
 [Erick Ricardo Vega Nolasco](https://pages.github.com/)
 
