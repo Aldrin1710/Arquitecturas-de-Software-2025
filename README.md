@@ -10,6 +10,6 @@ Repositorio para la recepción de cada una de las entregas del proyecto de la ma
 
 [Erick Ricardo Vega Nolasco](https://pages.github.com/)
 
-##Entregas del proyecto
+## Entregas del proyecto
 [Primera Entrega](https://www.facebook.com/?locale=es_LA)
 [Entrega final](https://www.facebook.com/?locale=es_LA)
