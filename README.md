@@ -9,7 +9,7 @@ Repositorio para la recepción de cada una de las entregas del proyecto de la as
 | [Guiseph Alexis Chan Torres](https://pages.github.com/)| N/A | Integrante.jpg |
 | [Aldrin Enique Novelo Góngora](https://github.com/Aldrin1710)| N/A | <img src="/Assets/AldrinNovelo.jpg" width="150" height="250"/>|
 | [Carlos Emmanuel Romerto Poot](https://github.com/CarlosRomero123)| N/A |Integrante.jpg |
-| [Erick Ricardo Vega Nolasco](https://pages.github.com/)| N/A | Integrante.jpg |
+| [Erick Ricardo Vega Nolasco](https://pages.github.com/)| N/A |<img src="/Assets/Erick.jpg" width="150" height="250"/> |
 
 
 ##  :computer: Entregas del proyecto
