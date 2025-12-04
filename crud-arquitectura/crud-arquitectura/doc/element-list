@@ -1,0 +1,6 @@
+com.example.crud_arquitectura
+com.example.crud_arquitectura.controlador
+com.example.crud_arquitectura.entidad
+com.example.crud_arquitectura.excepcion
+com.example.crud_arquitectura.repositorio
+com.example.crud_arquitectura.servicio

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.crud_arquitectura"},{"l":"com.example.crud_arquitectura.controlador"},{"l":"com.example.crud_arquitectura.entidad"},{"l":"com.example.crud_arquitectura.excepcion"},{"l":"com.example.crud_arquitectura.repositorio"},{"l":"com.example.crud_arquitectura.servicio"}];updateSearchResults();

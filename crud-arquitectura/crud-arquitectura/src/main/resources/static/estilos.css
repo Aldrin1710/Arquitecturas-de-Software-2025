@@ -1,0 +1,124 @@
+/* Estilos generales */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fcfcfc;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .contenedor-principal {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: #bfa15f; /* El dorado de la marca */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Tarjeta del formulario */
+        .tarjeta-form {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 4px solid #bfa15f;
+            margin-bottom: 25px;
+        }
+
+        .titulo-seccion {
+            margin-top: 0;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        /* Inputs y Labels */
+        .fila-formulario {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .campo {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box; /* Para que el padding no rompa el ancho */
+        }
+
+        /* Botones */
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-guardar {
+            background-color: #bfa15f;
+            color: white;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .btn-guardar:hover { background-color: #a3884e; }
+
+        .btn-editar { background-color: #ffc107; color: #333; }
+        .btn-eliminar { background-color: #dc3545; color: white; }
+        
+        .btn-borrar-masivo {
+            background-color: #c0392b;
+            color: white;
+            display: none; /* Se oculta si no hay nada seleccionado */
+            margin-bottom: 10px;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background-color: #eee;
+            padding: 12px;
+            text-align: left;
+            font-family: 'Playfair Display', serif;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Utilidades */
+        .error-texto {
+			color: #e74c3c;
+			    font-size: 0.8em;
+			    margin-top: 10px;
+			    display: none;
+			    background: rgb(253, 236, 234);
+			    padding: 10px;
+			    border-radius: 4px;
+			    border-left: 3px solid #e74c3c;
+        }

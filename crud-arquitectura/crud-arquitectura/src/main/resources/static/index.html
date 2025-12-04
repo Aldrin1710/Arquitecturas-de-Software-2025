@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | Joyería con Alma</title>
+	
+	<link rel="icon" href="data:,">
+	
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="estilos.css">
+	
+</head>
+<body>
+
+    <div class="contenedor-principal">
+        <h1>Joyería con Alma - Gestión de inventario</h1>
+
+        <div class="tarjeta-form">
+            <h3 class="titulo-seccion" id="tituloFormulario">Nuevo Producto</h3>
+            
+            <input type="hidden" id="idProducto">
+
+            <div class="fila-formulario">
+                <div class="campo">
+                    <label>Nombre de la pieza:</label>
+                    <input type="text" id="nombre" placeholder="Ej. Collar Yucatán">
+                </div>
+                <div class="campo">
+                    <label>Precio ($):</label>
+                    <input type="number" id="precio" placeholder="0.00">
+                </div>
+                <div class="campo">
+                    <label>Stock:</label>
+                    <input type="number" id="stock" placeholder="Cantidad">
+                </div>
+            </div>
+
+            <p id="mensajeError" class="error-texto"> Por favor completa todos los campos correctamente.</p>
+
+            <div style="text-align: right;">
+                <button onclick="limpiarFormulario()" style="background:transparent; color:#777; margin-top:20px;">Cancelar</button>
+                <button class="btn-guardar" id="botonGuardar" onclick="guardarProducto()">Guardar Producto</button>
+            </div>
+        </div>
+
+        <button id="btnBorrarMasivo" class="btn-borrar-masivo" onclick="eliminarSeleccionados()">
+             Eliminar marcados
+        </button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 40px; text-align: center;">
+                        <input type="checkbox" onclick="marcarTodos(this)">
+                    </th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // URL de la API (Backend)
+        const URL_API = 'http://localhost:8080/api/productos';
+
+        // Variables globales para los inputs
+        const inputId = document.getElementById('idProducto');
+        const inputNombre = document.getElementById('nombre');
+        const inputPrecio = document.getElementById('precio');
+        const inputStock = document.getElementById('stock');
+        
+        // Al cargar la página, traemos los productos
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarProductos();
+        });
+
+        // --- FUNCIONES CRUD ---
+
+        // 1. GET: Traer todos los productos
+        async function cargarProductos() {
+            try {
+                const respuesta = await fetch(URL_API);
+                const productos = await respuesta.json();
+                
+                renderizarTabla(productos);
+            } catch (error) {
+                console.error("Error cargando productos:", error);
+                alert("Error al conectar con el servidor.");
+            }
+        }
+
+        // Función auxiliar para pintar la tabla HTML
+        function renderizarTabla(listaProductos) {
+            const tbody = document.getElementById('cuerpoTabla');
+            tbody.innerHTML = ''; // Limpiamos la tabla para no duplicar
+
+            listaProductos.forEach(prod => {
+                // Formato de moneda simple
+                let precioFormato = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(prod.precio);
+
+                // Truco: Pasamos los datos directamente en el onclick del botón editar para no volver a consultar la API
+                // Ojo: Las comillas simples y dobles pueden ser un dolor de cabeza aquí
+                let datosProducto = JSON.stringify(prod).replace(/"/g, '&quot;');
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="text-align: center;">
+                            <input type="checkbox" class="check-producto" value="${prod.id}" onchange="verificarChecks()">
+                        </td>
+                        <td>${prod.nombre}</td>
+                        <td>${precioFormato}</td>
+                        <td>${prod.stock} pzas.</td>
+                        <td style="text-align: right;">
+                            <button class="btn-editar" onclick="llenarFormulario(${datosProducto})">✏️</button>
+                            <button class="btn-eliminar" onclick="eliminarProducto(${prod.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            verificarChecks(); // Para ocultar el botón masivo si se recarga
+        }
+
+        // 2. POST / PUT: Guardar o Actualizar
+        async function guardarProducto() {
+            // Validamos que no estén vacíos
+            if (inputNombre.value === '' || inputPrecio.value === '' || inputStock.value === '') {
+                document.getElementById('mensajeError').style.display = 'block';
+                return;
+            }
+            document.getElementById('mensajeError').style.display = 'none';
+
+            const producto = {
+                nombre: inputNombre.value,
+                precio: parseFloat(inputPrecio.value),
+                stock: parseInt(inputStock.value)
+            };
+
+            const id = inputId.value; // Si tiene ID, es editar. Si no, es nuevo.
+
+            let metodo = 'POST';
+            let urlDestino = URL_API;
+
+            if (id) {
+                metodo = 'PUT';
+                urlDestino = URL_API + '/' + id; // api/productos/id
+            }
+
+			const respuesta = await fetch(urlDestino, {
+			                method: metodo,
+			                headers: { 'Content-Type': 'application/json' },
+			                body: JSON.stringify(producto)
+			            });
+			
+			if (!respuesta.ok) {
+			                // Si el servidor responde con error (ej. 404)
+			                const errorData = await respuesta.json();
+			                alert(" Error del Servidor: " + errorData.message); 
+			                return; // Detenemos todo aquí
+			            }
+
+            limpiarFormulario();
+            cargarProductos(); // Recargamos la tabla
+        }
+
+        // 3. Preparar formulario para Editar
+        // Recibe el objeto producto completo desde el botón de la tabla
+        function llenarFormulario(producto) {
+            inputId.value = producto.id;
+            inputNombre.value = producto.nombre;
+            inputPrecio.value = producto.precio;
+            inputStock.value = producto.stock;
+
+            // Cambiamos el texto para que el usuario sepa que está editando
+            document.getElementById('tituloFormulario').innerText = "Editando: " + producto.nombre;
+            document.getElementById('botonGuardar').innerText = "Actualizar Producto";
+            
+            // Subimos el scroll para ver el formulario
+            window.scrollTo(0, 0);
+        }
+
+        // 4. DELETE: Borrar uno
+        async function eliminarProducto(id) {
+            let confirmacion = confirm("¿Seguro que quieres borrar este producto?");
+            if (confirmacion) {
+                await fetch(URL_API + '/' + id, { method: 'DELETE' });
+                cargarProductos();
+            }
+        }
+
+        // --- LÓGICA DE CHECKBOXES (ELIMINAR VARIOS) ---
+
+        function verificarChecks() {
+            // Buscamos cuántos checkboxes están marcados
+            const marcados = document.querySelectorAll('.check-producto:checked');
+            const btnMasivo = document.getElementById('btnBorrarMasivo');
+
+            if (marcados.length > 0) {
+                btnMasivo.style.display = 'block';
+                btnMasivo.innerText = ` Eliminar (${marcados.length}) seleccionados`;
+            } else {
+                btnMasivo.style.display = 'none';
+            }
+        }
+
+        function marcarTodos(source) {
+            const checkboxes = document.querySelectorAll('.check-producto');
+            checkboxes.forEach(chk => {
+                chk.checked = source.checked;
+            });
+            verificarChecks();
+        }
+
+        async function eliminarSeleccionados() {
+            const marcados = document.querySelectorAll('.check-producto:checked');
+            
+            if (confirm(`¿Vas a borrar ${marcados.length} productos? Esta acción no se deshace.`)) {
+                // Hacemos un array de promesas para borrarlos todos "al mismo tiempo"
+                const promesasBorrado = [];
+                
+                marcados.forEach(chk => {
+                    const peticion = fetch(URL_API + '/' + chk.value, { method: 'DELETE' });
+                    promesasBorrado.push(peticion);
+                });
+
+                // Esperamos a que todos terminen
+                await Promise.all(promesasBorrado);
+                
+                // Limpiamos el check principal y recargamos
+                document.querySelector('input[onclick="marcarTodos(this)"]').checked = false;
+                cargarProductos();
+            }
+        }
+
+        function limpiarFormulario() {
+            inputId.value = '';
+            inputNombre.value = '';
+            inputPrecio.value = '';
+            inputStock.value = '';
+            document.getElementById('mensajeError').style.display = 'none';
+            
+            // Restauramos textos originales
+            document.getElementById('tituloFormulario').innerText = "Nuevo Producto";
+            document.getElementById('botonGuardar').innerText = "Guardar Producto";
+        }
+
+    </script>
+</html>
