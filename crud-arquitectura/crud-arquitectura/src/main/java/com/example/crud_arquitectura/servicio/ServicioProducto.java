@@ -11,8 +11,10 @@ import com.example.crud_arquitectura.repositorio.RepositorioProducto;
 
 /**
  * Servicio que encapsula la lógica de negocio de la aplicación.
- * Se comunica directamente con el Repositorio para realizar operaciones CRUD.
- * * @version 1.0
+ * Se comunica directamente con el Repositorio para realizar operaciones CRUD en la BD.
+ * *
+ *  @author Aldrin, Charly, Erick y Giuseph
+ * @version 1.0
  */
 @Service
 public class ServicioProducto {

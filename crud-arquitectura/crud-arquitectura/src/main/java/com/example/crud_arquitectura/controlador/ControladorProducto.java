@@ -17,13 +17,13 @@ import com.example.crud_arquitectura.entidad.Producto;
 import com.example.crud_arquitectura.excepcion.RecursoNoEncontradoException;
 import com.example.crud_arquitectura.servicio.ServicioProducto;
 
-
 /**
- * Controlador REST que expone los endpoints (puntos de acceso) para la gestión de productos.
+ * Controlador REST que expone los endpoints para la gestión de productos.
  * Actúa como intermediario entre la vista (Frontend) y la capa de servicio.
- * * @author Aldrin
+ * * @author Aldrin, Charly, Erick y Giuseph 
  * @version 1.0
  */
+
 @RestController
 @RequestMapping("/api/productos")
 public class ControladorProducto {
@@ -73,7 +73,7 @@ public class ControladorProducto {
 	/**
 	 * Actualiza la información de un producto existente.
 	 * Lanza una excepción personalizada si el ID no existe.
-	 * * @param id Identificador del producto a editar.
+	 * @param id Identificador del producto a editar.
 	 * @param detallesProducto Objeto con la nueva información.
 	 * @return El producto actualizado.
 	 * @throws RecursoNoEncontradoException Si el ID no existe en la BD.

@@ -7,8 +7,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Clase Entidad que representa la tabla 'producto' en la base de datos.
- * Utiliza anotaciones JPA para el mapeo objeto-relacional (ORM).
+ * Clase Producto que representa la tabla 'producto' en la base de datos
+ * Utiliza anotaciones JPA (Java Persistence API) para el mapeo objeto-relacional 
+ * @author Aldrin, Charly, Erick y Giuseph 	
+ * @version 1.0
  */
 @Entity
 @Table(name = "producto")
@@ -41,6 +43,10 @@ public class Producto {
     
    /** Getters y setters **/
     
+    /**
+     * Obtiene el identificador único del producto.
+     * @return El ID del producto (Long).
+     */
     public Long getId() { 
     	return id; 
     }
@@ -49,14 +55,26 @@ public class Producto {
     	this.id = id; 
     }
     
+    /**
+     * Obtiene el nombre del producto.
+     * @return El nombre del producto (String).
+     */
     public String getNombre() {
     	return nombre;
     }
     
+    /**
+     * Obtiene el precio del producto.
+     * @return El precio del producto (Double).
+     */
     public Double getPrecio() {
     	return precio;
     }
     
+    /**
+     * Obtiene el inventario del producto.
+     * @return El stock del producto (Integer).
+     */
     public Integer getStock() {
     	return stock;
     }

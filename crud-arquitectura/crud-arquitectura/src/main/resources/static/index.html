@@ -12,7 +12,7 @@
 	
 </head>
 <body>
-
+	
     <div class="contenedor-principal">
         <h1>Joyería con Alma - Gestión de inventario</h1>
 
@@ -28,11 +28,11 @@
                 </div>
                 <div class="campo">
                     <label>Precio ($):</label>
-                    <input type="number" id="precio" placeholder="0.00">
+                    <input type="number"  min="0" id="precio" placeholder="0.00">
                 </div>
                 <div class="campo">
                     <label>Stock:</label>
-                    <input type="number" id="stock" placeholder="Cantidad">
+                    <input type="number" min="0" id="stock" placeholder="Cantidad">
                 </div>
             </div>
 
@@ -66,23 +66,19 @@
     </div>
 
     <script>
-        // URL de la API (Backend)
         const URL_API = 'http://localhost:8080/api/productos';
 
-        // Variables globales para los inputs
         const inputId = document.getElementById('idProducto');
         const inputNombre = document.getElementById('nombre');
         const inputPrecio = document.getElementById('precio');
         const inputStock = document.getElementById('stock');
         
-        // Al cargar la página, traemos los productos
+        // Al cargar la página traemos los productos
         document.addEventListener("DOMContentLoaded", () => {
             cargarProductos();
         });
 
         // --- FUNCIONES CRUD ---
-
-        // 1. GET: Traer todos los productos
         async function cargarProductos() {
             try {
                 const respuesta = await fetch(URL_API);
@@ -95,40 +91,7 @@
             }
         }
 
-        // Función auxiliar para pintar la tabla HTML
-        function renderizarTabla(listaProductos) {
-            const tbody = document.getElementById('cuerpoTabla');
-            tbody.innerHTML = ''; // Limpiamos la tabla para no duplicar
-
-            listaProductos.forEach(prod => {
-                // Formato de moneda simple
-                let precioFormato = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(prod.precio);
-
-                // Truco: Pasamos los datos directamente en el onclick del botón editar para no volver a consultar la API
-                // Ojo: Las comillas simples y dobles pueden ser un dolor de cabeza aquí
-                let datosProducto = JSON.stringify(prod).replace(/"/g, '&quot;');
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="text-align: center;">
-                            <input type="checkbox" class="check-producto" value="${prod.id}" onchange="verificarChecks()">
-                        </td>
-                        <td>${prod.nombre}</td>
-                        <td>${precioFormato}</td>
-                        <td>${prod.stock} pzas.</td>
-                        <td style="text-align: right;">
-                            <button class="btn-editar" onclick="llenarFormulario(${datosProducto})">✏️</button>
-                            <button class="btn-eliminar" onclick="eliminarProducto(${prod.id})">🗑️</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            verificarChecks(); // Para ocultar el botón masivo si se recarga
-        }
-
-        // 2. POST / PUT: Guardar o Actualizar
         async function guardarProducto() {
-            // Validamos que no estén vacíos
             if (inputNombre.value === '' || inputPrecio.value === '' || inputStock.value === '') {
                 document.getElementById('mensajeError').style.display = 'block';
                 return;
@@ -141,60 +104,90 @@
                 stock: parseInt(inputStock.value)
             };
 
-            const id = inputId.value; // Si tiene ID, es editar. Si no, es nuevo.
+            const id = inputId.value; // Si tiene ID, es editar.
 
             let metodo = 'POST';
             let urlDestino = URL_API;
 
             if (id) {
                 metodo = 'PUT';
-                urlDestino = URL_API + '/' + id; // api/productos/id
+                urlDestino = URL_API + '/' + id; 
             }
 
 			const respuesta = await fetch(urlDestino, {
-			                method: metodo,
-			                headers: { 'Content-Type': 'application/json' },
-			                body: JSON.stringify(producto)
-			            });
+				method: metodo,
+			    headers: { 'Content-Type': 'application/json' },
+			    body: JSON.stringify(producto)
+			});
 			
 			if (!respuesta.ok) {
-			                // Si el servidor responde con error (ej. 404)
-			                const errorData = await respuesta.json();
-			                alert(" Error del Servidor: " + errorData.message); 
-			                return; // Detenemos todo aquí
-			            }
+				if (respuesta.status === 404) {
+					alert("El producto que intentas editar ya no existe."); 
+				    limpiarFormulario(); // Limpiamos el form
+				    return; 
+				}
+				const errorData = await respuesta.json();
+				alert(" Error del Servidor: " + errorData.message); 
+				return; 
+			 }
 
             limpiarFormulario();
-            cargarProductos(); // Recargamos la tabla
+            cargarProductos(); 
         }
-
-        // 3. Preparar formulario para Editar
-        // Recibe el objeto producto completo desde el botón de la tabla
+		
+		async function eliminarProducto(id) {
+			let confirmacion = confirm("¿Seguro que quieres borrar este producto?");
+		    if (confirmacion) {
+		    		await fetch(URL_API + '/' + id, { method: 'DELETE' });
+		    }
+					
+			if(inputId.value == id){
+				limpiarFormulario();
+			}
+			cargarProductos();
+		}
+	
+		// Para actualizar los datos de un registro
         function llenarFormulario(producto) {
             inputId.value = producto.id;
             inputNombre.value = producto.nombre;
             inputPrecio.value = producto.precio;
             inputStock.value = producto.stock;
 
-            // Cambiamos el texto para que el usuario sepa que está editando
             document.getElementById('tituloFormulario').innerText = "Editando: " + producto.nombre;
             document.getElementById('botonGuardar').innerText = "Actualizar Producto";
             
-            // Subimos el scroll para ver el formulario
             window.scrollTo(0, 0);
         }
+		
+		function renderizarTabla(listaProductos) {
+			const tbody = document.getElementById('cuerpoTabla');
+		    tbody.innerHTML = ''; // Limpiamos la tabla para no duplicar
 
-        // 4. DELETE: Borrar uno
-        async function eliminarProducto(id) {
-            let confirmacion = confirm("¿Seguro que quieres borrar este producto?");
-            if (confirmacion) {
-                await fetch(URL_API + '/' + id, { method: 'DELETE' });
-                cargarProductos();
-            }
-        }
+		    listaProductos.forEach(prod => {
+		    // Formato de moneda simple
+		    let precioFormato = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(prod.precio);
+			let datosProducto = JSON.stringify(prod).replace(/"/g, '&quot;');
 
-        // --- LÓGICA DE CHECKBOXES (ELIMINAR VARIOS) ---
+		    tbody.innerHTML += `
+		                    <tr>
+		                        <td style="text-align: center;">
+		                            <input type="checkbox" class="check-producto" value="${prod.id}" onchange="verificarChecks()">
+		                        </td>
+		                        <td>${prod.nombre}</td>
+		                        <td>${precioFormato}</td>
+		                        <td>${prod.stock} pzas.</td>
+		                        <td style="text-align: right;">
+		                            <button class="btn-editar" onclick="llenarFormulario(${datosProducto})">✏️</button>
+		                            <button class="btn-eliminar" onclick="eliminarProducto(${prod.id})">🗑️</button>
+		                        </td>
+		                    </tr>
+		                `;
+		       });
+		       verificarChecks(); 
+		 }
 
+        // --- 	Logica de Checkboxes ---
         function verificarChecks() {
             // Buscamos cuántos checkboxes están marcados
             const marcados = document.querySelectorAll('.check-producto:checked');
@@ -220,7 +213,6 @@
             const marcados = document.querySelectorAll('.check-producto:checked');
             
             if (confirm(`¿Vas a borrar ${marcados.length} productos? Esta acción no se deshace.`)) {
-                // Hacemos un array de promesas para borrarlos todos "al mismo tiempo"
                 const promesasBorrado = [];
                 
                 marcados.forEach(chk => {
@@ -228,7 +220,6 @@
                     promesasBorrado.push(peticion);
                 });
 
-                // Esperamos a que todos terminen
                 await Promise.all(promesasBorrado);
                 
                 // Limpiamos el check principal y recargamos
